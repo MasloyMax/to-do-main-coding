@@ -1,9 +1,10 @@
 import React, {KeyboardEvent,ChangeEvent, useState} from 'react';
-import '../App'
+import '../../App'
 import {v1} from "uuid";
 import {string} from "prop-types";
-import {FilterValuesType} from "../App";
-import {Button} from "./Button";
+import {FilterValuesType} from "../../App";
+import {Button} from "../Button/Button";
+import {AddItemForm} from "../AddItemForm/AddItemform";
 
 type PropsType = {
     tasks: Array<TaskType>
@@ -28,26 +29,8 @@ export const ToDoList = (props: PropsType) => {
         addTask,
         removeTask,
         checkedTasks,
-        getFilteredForRender,
         changeTodoListFilter,
     } = props
-
-    const [title, setTitle] = useState('')
-    const [error, setError] = useState('')
-
-    const onClickAddTaskHandler = () => {
-        addTask(todolistId, title)
-    }
-
-    const onChangeAddTaskHandler = (e: ChangeEvent<HTMLInputElement>) => {
-        setTitle(e.currentTarget.value)
-    }
-
-    const onEnterClickHandler = (e: KeyboardEvent<HTMLInputElement>) => {
-        if(e.key === 'Enter'){
-            addTask(todolistId,title)
-        }
-    }
 
     const newTask = tasks.length
         ? tasks.map((t) => {
@@ -74,14 +57,13 @@ export const ToDoList = (props: PropsType) => {
             Loading
         </div>
 
+    const addTaskHandler = (title:string) => {
+      addTask(todolistId, title)
+    }
+
     return (
         <div className={'todo_container'}>
-            <div>
-                <input onChange={onChangeAddTaskHandler}
-                       onKeyDown={onEnterClickHandler}
-                       value={title}/>
-                <button onClick={onClickAddTaskHandler}>+</button>
-            </div>
+            <AddItemForm callBack={addTaskHandler}/>
             <div>
                 {newTask}
             </div>

@@ -1,9 +1,10 @@
 import React, {ChangeEvent, KeyboardEvent, useState} from 'react';
 import './App.css';
 import {v1} from "uuid";
-import {TaskType, ToDoList} from "./Components/ToDoList";
+import {TaskType, ToDoList} from "./Components/ToDoList/ToDoList";
 import {string} from "prop-types";
-import {Button} from "./Components/Button";
+import {Button} from "./Components/Button/Button";
+import {AddItemForm} from "./Components/AddItemForm/AddItemform";
 
 export type FilterValuesType = 'all' | 'active' | 'completed'
 
@@ -40,7 +41,8 @@ function App() {
 
     })
 
-    const [todoTitle,setTodoTitle] = useState('')
+    const [todoTitle, setTodoTitle] = useState('')
+    const [error, setError] = useState('')
 
     const addTask = (todolistId: string, title: string) => {
         const newTask = {id: v1(), title: title, isDone: true}
@@ -79,21 +81,15 @@ function App() {
     }
 
     const addToDoLists = (todoTitle: string) => {
-        let toDoId = v1()
-        let newToDo: TodoListType = {id: toDoId, title: todoTitle, filter: "all"}
-        setTodoLists([newToDo,...todoLists])
-        setTasks({...tasks, [toDoId]: []})
-    }
-
-    const onChangeToDoLists = (e:ChangeEvent<HTMLInputElement>) => {
-        setTodoTitle(e.currentTarget.value)
-        console.log(todoTitle)
-    }
-
-    const onKeyDownToDo = (e:KeyboardEvent<HTMLInputElement>) => {
-      if(e.key === 'Enter'){
-          addToDoLists(todoTitle)
-      }
+        if (todoTitle.trim() !== '') {
+            let toDoId = v1()
+            let newToDo: TodoListType = {id: toDoId, title: todoTitle, filter: "all"}
+            setTodoLists([newToDo, ...todoLists])
+            setTasks({...tasks, [toDoId]: [{id: v1(), title: "Тут будет название нашей таски", isDone: true}]})
+            setTodoTitle('')
+        } else {
+            setError('Пустую строку не ввести')
+        }
     }
 
     const toDoMap =
@@ -118,10 +114,9 @@ function App() {
 
     return (
         <div className={'container_app'}>
+            <AddItemForm callBack={addToDoLists}/>
             <div>
-                <input onChange={onChangeToDoLists}
-                onKeyDown={onKeyDownToDo}/>
-                <button onClick={()=>addToDoLists(todoTitle)}>+</button>
+                {error ? <div>{error}</div> : <div></div>}
             </div>
             {toDoMap}
         </div>
