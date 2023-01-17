@@ -5,6 +5,7 @@ import {string} from "prop-types";
 import {FilterValuesType} from "../../App";
 import {Button} from "../Button/Button";
 import {AddItemForm} from "../AddItemForm/AddItemform";
+import {EditableSpan} from "../EditebleSpan";
 
 type PropsType = {
     tasks: Array<TaskType>
@@ -14,6 +15,7 @@ type PropsType = {
     checkedTasks: (todolistId: string, taskId: string, isDone: boolean) => void
     getFilteredForRender: (tasks: TaskType[], filter: FilterValuesType) => void
     changeTodoListFilter: (todolistId: string, filter: FilterValuesType) => void
+    updateTasks:(todolistId: string,taskId: string,value:string )=> void
 }
 
 export type TaskType = {
@@ -30,6 +32,7 @@ export const ToDoList = (props: PropsType) => {
         removeTask,
         checkedTasks,
         changeTodoListFilter,
+        updateTasks,
     } = props
 
     const newTask = tasks.length
@@ -43,12 +46,16 @@ export const ToDoList = (props: PropsType) => {
                 checkedTasks(todolistId, t.id, e.currentTarget.checked)
             }
 
+            const updateTaskHandler = (value:string) => {
+              updateTasks(todolistId,t.id,value)
+            }
+
             return (
                 <ul key={t.id}>
                     <input type="checkbox"
                            checked={t.isDone}
                            onChange={onChangeCheckedHandler}/>
-                    <span>{t.title}</span>
+                    <EditableSpan OLDtitle={t.title} callBack={updateTaskHandler}/>
                     <Button callBack={onClickRemoveTaskHandler} name={'x'}/>
                 </ul>
             )

@@ -85,11 +85,15 @@ function App() {
             let toDoId = v1()
             let newToDo: TodoListType = {id: toDoId, title: todoTitle, filter: "all"}
             setTodoLists([newToDo, ...todoLists])
-            setTasks({...tasks, [toDoId]: [{id: v1(), title: "Тут будет название нашей таски", isDone: true}]})
+            setTasks({...tasks, [toDoId]: [{id: v1(), title: "Тут будет название нашей таскиУ мен", isDone: true}]})
             setTodoTitle('')
         } else {
             setError('Пустую строку не ввести')
         }
+    }
+
+    const updateTasks = (todolistId: string,taskId: string,value:string ) => {
+        setTasks({...tasks, [todolistId]: [...tasks[todolistId]].map(t => t.id === taskId ? {...t, title: value} : t)})
     }
 
     const toDoMap =
@@ -106,6 +110,7 @@ function App() {
                               checkedTasks={checkedTasks}
                               getFilteredForRender={getFilteredForRender}
                               changeTodoListFilter={changeTodoListFilter}
+                              updateTasks={updateTasks}
                     />
                 </div>
 
